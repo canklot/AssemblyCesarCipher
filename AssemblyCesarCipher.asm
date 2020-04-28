@@ -1,5 +1,3 @@
-TITLE PGM_1: CASE CONVERSTION PROGRAM
-
 .MODEL SMALL
 .STACK 100H
 .DATA
@@ -7,9 +5,12 @@ TITLE PGM_1: CASE CONVERSTION PROGRAM
 CR EQU 0DH
 LF EQU 0AH
 
-MSG1 DB 'ENTER A LOWER CASE LETTER $'
-MSG2 DB 0DH,0AH, 'IN UPPER CASE ITS IS: '
-CHAR DB ?,'$'
+MSG0 DB 'WELCOME TO THE EMU8086 CESAR CIPHER: ',0DH,0AH,0DH,0AH, 'PLEASE ENTER HOW MANY TIMES DO YOU WANT TO SHIFT THE ALPHABET:  ', '$'
+MSG1 DB 0DH,0AH, 0DH,0AH, 'ENTER THE ORIGINAL MESSAGE LETTER BY LETTER: $'
+MSG2 DB 0DH,0AH, 'CRYPTED MESSAGE IS LETTER BY LETTER: '
+ 
+
+CHAR DB ?, 0DH,0AH ,'$'
 
 .CODE
 
@@ -17,47 +18,58 @@ MAIN PROC
     ;INITALIZE DS
     MOV AX, @DATA       ;get data segment
     MOV DS,AX           ;initailize DS
-
-    MOV AH,1            ;read character function
-    INT 21H             ;read a small letter into AL
-    MOV AL,BL
-    SUB BL,30h
     
-    go:
-    ;print user prompt
-    LEA DX,MSG1         ;get first message
-    MOV AH,9            ;display sting function
-    INT 21H            ;display first message 
+    ;display welcome message
+    LEA DX,MSG0         ;MSG0'in adresini dx'e yukle
+    MOV AH,9            ;AH registerina 9 yaz. Bu ekrana bas demek
+    INT 21H             ;AH registerine bak ve icindeki sayiya karsilik gelen INT21 fonksiyonu'nu cagir. Bu fonksiyon dx yazmacinda belirtilen ofset adresinden itibaren $ karakteri ile karsilasana kadar karakterleri ekrana yazar.
+  
+    ;input number
+    MOV AH,1            ;AH registerine 1 yaz.
+    INT 21H             ;AH registerine bak ve icindeki sayiya karsilik gelen fonksiyonu cagir. INT21,1 fonksiyonu klavyeden veri girisi icin beklenir. Klavyeden girilen tus AL yazmacina koyulur.
+    SUB AL,30h          ;Neden bilmiyorum ama 1 girince 31 oluyor o yuzden 30 cikardik. Normal 30 yazinca olmuyor 30h olmasi lazim
+    MOV BH,AL           ;AL'yi BH'a kopyala
+ 
+    
+
+ 
+    go:                 ;go isimli bir belirtec koy
+    
+    ;display MSG1
+    LEA DX,MSG1         ;MSG0'in adresini dx'e yukle
+    MOV AH,9            ;AH registerina 9 yaz.
+    INT 21H             ;AH registerine bak ve icindeki sayiya karsilik gelen INT21 fonksiyonu'nu cagir. Bu fonksiyon dx yazmacinda belirtilen ofset adresinden itibaren $ karakteri ile karsilasana kadar karakterleri ekrana yazar.
 
 
 
 
-    ;input a char and cover to upper case
-    MOV AH,1            ;read character function
-    INT 21H             ;read a small letter into AL
-    add AL, BL         ;convert it to upper case
-    MOV CHAR, AL        ;and store it
+ 
 
-    ;display on the next line
-    LEA DX,MSG2         ;get second message
-    MOV AH,9            ;display message and uppercase
-    INT 21H             ;letter in front
-    MOV dl, 10
+    ;input letter
+    MOV AH,1            ;AH registerine 1 yaz
+    INT 21H             ;AH registerine bak ve icindeki sayiya karsilik gelen fonksiyonu cagir. INT21,1 fonksiyonu klavyeden veri girisi icin beklenir. Klavyeden girilen tus AL yazmacina koyulur.
+    add AL, bh          ;AL registerini BH kadar arttir
+    MOV CHAR, AL        ;AL'yi CHAR db'sine yaz. 
 
-    ;yeni satir
-    MOV ah, 02h
-    INT 21h
-    MOV dl, 13
-    MOV ah, 02h
-    INT 21h
+    ;display on ciphered text
+    LEA DX,MSG2         ;MSG2'in adresini dx'e yukle
+    MOV AH,9            ;AH registerine 9 yaz
+    INT 21H             ;Dolar isareti gorene kadar ekrana bas. MSG2'nin sonunda dolar isareti yok ve sonrasinde bellekte CHAR degeri var bu yuzden hem MSG2 hem CHAR degeri ekrana basilir.
+    
 
-    jmp go
+    
 
+    jmp go  ;go isili belirtece zipla
+            ;donguyle surekli olarak harf almasini sagliyoruz
 
 
     ;DOS EXIT
     MOV AH,4CH
-    INT 21H             ;dos exit
-
-MAIN ENDP
-    END MAIN
+    INT 21H             ;dos exit   
+    
+    
+    
+    alphabetoverflow:
+    
+    
+    ;not alphabet overflow hatasini kapat
