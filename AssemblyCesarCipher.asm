@@ -49,9 +49,16 @@ MAIN PROC
     MOV AH,1            ;AH registerine 1 yaz
     INT 21H             ;AH registerine bak ve icindeki sayiya karsilik gelen fonksiyonu cagir. INT21,1 fonksiyonu klavyeden veri girisi icin beklenir. Klavyeden girilen tus AL yazmacina koyulur.
     add AL, bh          ;AL registerini BH kadar arttir
-    MOV CHAR, AL        ;AL'yi CHAR db'sine yaz. 
-
-    ;display on ciphered text
+    
+    
+    
+    CMP AL,0x79
+    JG  alphabetoverflow
+     
+    displayciphered: 
+     
+    ;display on ciphered text 
+    MOV CHAR, AL        ;AL'yi CHAR db'sine yaz. Daha sonra burasi ekrana bailacak
     LEA DX,MSG2         ;MSG2'in adresini dx'e yukle
     MOV AH,9            ;AH registerine 9 yaz
     INT 21H             ;Dolar isareti gorene kadar ekrana bas. MSG2'nin sonunda dolar isareti yok ve sonrasinde bellekte CHAR degeri var bu yuzden hem MSG2 hem CHAR degeri ekrana basilir.
@@ -70,6 +77,11 @@ MAIN PROC
     
     
     alphabetoverflow:
+    SUB AL,0x1A
+    JMP displayciphered
     
     
+    
+    
+    ;not tek basamakli sayi girilebiliyor sadece
     ;not alphabet overflow hatasini kapat
