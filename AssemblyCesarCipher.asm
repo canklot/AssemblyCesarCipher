@@ -83,5 +83,5 @@ MAIN PROC
     
     
     
-    ;not tek basamakli sayi girilebiliyor sadece
-    ;not alphabet overflow hatasini kapat
+    ;not tek basamakli sayi girilebiliyor sadece onu duzelt
+    
