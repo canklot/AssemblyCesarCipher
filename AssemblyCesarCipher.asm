@@ -98,9 +98,9 @@ MAIN PROC
     
     
     
-    alphabetoverflow:
-    SUB AL,0x1A
-    JMP control
+    alphabetoverflow:   ;kaydirilan harf z den daha buyuk olursa en basa sarmak ici dongu
+    SUB AL,0x1A         ;ascii olarak z-a=1A o yuzden 1A kadar cikariyoruz
+    JMP control         ;control kismina zipla
     
     
     
@@ -110,4 +110,5 @@ MAIN PROC
     
     ;Not tum sayilari decimale cevir oyle islem yap hex oldugunu unutuyorsun sonra 1+10 neden 17 yapiyor diyosun
     
-    ;Neden bilmiyorum ama 1 girince 31 oluyor o yuzden 30 cikardik. Normal 30 yazinca olmuyor 30h olmasi lazim. Debug yaparken variables kisminda degiskenleri hex,bin,ascii olarak goster var o zaman anladim. Assci olarak 1 hexadecimal 31 oluyorus. Cok sacma ben 1'in degeri 1 olmali bence neden gidip taa 31'e koyarsin ki?
+    ;Neden bilmiyorum ama 1 girince 31 oluyor o yuzden 30 cikardik. Normal 30 yazinca olmuyor 30h olmasi lazim.
+    ;Debug yaparken variables kisminda degiskenleri hex,bin,ascii olarak goster var o zaman anladim. Assci olarak 1 hexadecimal 31 oluyorus. Cok sacma ben 1'in degeri 1 olmali bence neden gidip taa 31'e koyarsin ki?
