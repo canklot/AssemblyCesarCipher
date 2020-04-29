@@ -1,11 +1,12 @@
 .MODEL SMALL
 .STACK 100H
 .DATA
+                                         
+                         ; CR  0DH   carriage return
+                         ; LF  0AH   line feed
+                         ; ikisi yan yana windowsta yeni satir demek
 
-CR EQU 0DH
-LF EQU 0AH
-
-numbers DB ?,'$'        ;Soru isareti initialize olmamis tek byte demek max 127 tutabilir. Dolar isareti ise string sonu demek.
+numbers DB ?            ;Soru isareti initialize olmamis tek byte demek max 127 tutabilir. Dolar isareti ise string sonu demek.
 
 harf DB ?
 
@@ -45,9 +46,7 @@ MAIN PROC
     ADD AL,numbers
     MOV numbers,AL
  
-    
-
- 
+  
     go:                 ;go isimli bir belirtec koy
     
     ;display MSG1
@@ -56,9 +55,6 @@ MAIN PROC
     INT 21H             ;AH registerine bak ve icindeki sayiya karsilik gelen INT21 fonksiyonu'nu cagir. Bu fonksiyon dx yazmacinda belirtilen ofset adresinden itibaren $ karakteri ile karsilasana kadar karakterleri ekrana yazar.
 
 
-
-
- 
 
     ;input letter
     MOV AH,1            ;AH registerine 1 yaz
@@ -69,12 +65,12 @@ MAIN PROC
     
     ;Add
     MOV AL, harf
-    add AL, numbers          ;AL registerini arttir
-    mov harf, AL
+    add AL, numbers          ;girilen harfin ascii degerini girilen sayi kadar arttir
+    mov harf, AL             ;sonucu hard degiskininde sakla
     
     control:
     
-    CMP AL,7Ah
+    CMP AL,7Bh
     JNB  alphabetoverflow
      
      
@@ -105,10 +101,7 @@ MAIN PROC
     
     
     
-    ;not tek basamakli sayi girilebiliyor sadece onu duzelt
-    
-    
-    ;Not tum sayilari decimale cevir oyle islem yap hex oldugunu unutuyorsun sonra 1+10 neden 17 yapiyor diyosun
-    
+   
+    ;Not tum sayilari decimale cevir oyle islem yap hex oldugunu unutuyorsun sonra 1+10 neden 17 yapiyor diyosun.Yada tam tersi
     ;Neden bilmiyorum ama 1 girince 31 oluyor o yuzden 30 cikardik. Normal 30 yazinca olmuyor 30h olmasi lazim.
-    ;Debug yaparken variables kisminda degiskenleri hex,bin,ascii olarak goster var o zaman anladim. Assci olarak 1 hexadecimal 31 oluyorus. Cok sacma ben 1'in degeri 1 olmali bence neden gidip taa 31'e koyarsin ki?
+    ;Debug yaparken variables kisminda degiskenleri hex,bin,ascii olarak goster var o zaman anladim. Assci olarak 1 hexadecimal 31 oluyorus. Cok sacma bence 1'in degeri 1 olmali bence neden gidip taa 31'e koyarsin ki?
