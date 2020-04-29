@@ -72,11 +72,12 @@ MAIN PROC
     add AL, numbers          ;AL registerini arttir
     mov harf, AL
     
+    control:
     
     CMP AL,7Ah
     JNB  alphabetoverflow
      
-    displayciphered: 
+     
      
     ;display on ciphered text 
     MOV CHAR, AL        ;AL'yi CHAR db'sine yaz. Daha sonra burasi ekrana bailacak
@@ -99,7 +100,7 @@ MAIN PROC
     
     alphabetoverflow:
     SUB AL,0x1A
-    JMP displayciphered
+    JMP control
     
     
     
